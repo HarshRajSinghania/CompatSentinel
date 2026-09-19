@@ -206,6 +206,14 @@ def diff(
         bool,
         typer.Option("--show-info", help="List info-level findings instead of summarising them."),
     ] = False,
+    quiet: Annotated[
+        bool,
+        typer.Option(
+            "--quiet",
+            "-q",
+            help="Print only the overall verdict line (JSON/HTML writers still run).",
+        ),
+    ] = False,
     html_path: Annotated[
         Path | None, typer.Option("--html", help="Also write a single-file HTML report here.")
     ] = None,
@@ -213,7 +221,7 @@ def diff(
     """Compare two snapshots and print the findings with a risk score per app."""
     result = _run_diff(before, after, store_dir, app_ids, startup_pct, startup_ms)
 
-    terminal.render(result, console, show_info=show_info)
+    terminal.render(result, console, show_info=show_info, quiet=quiet)
     if json_path is not None:
         json_path.write_text(result.model_dump_json(indent=2) + "\n", encoding="utf-8")
         console.print(f"[green]Wrote[/green] {json_path}")
@@ -269,7 +277,7 @@ def report(
 
 
 def open_in_browser(path: Path) -> bool:
-    """Open ``path`` with the default browser; return whether a browser was launched.
+    """Open ``path" with the default browser; return whether a browser was launched.
 
     Must never raise: on a headless host there is no browser, and the report
     was still written. Use ``Path.resolve()`` and ``as_uri()`` so the file is
