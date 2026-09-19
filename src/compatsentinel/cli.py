@@ -277,7 +277,7 @@ def report(
 
 
 def open_in_browser(path: Path) -> bool:
-    """Open ``path" with the default browser; return whether a browser was launched.
+    """Open ``path`` with the default browser; return whether a browser was launched.
 
     Must never raise: on a headless host there is no browser, and the report
     was still written. Use ``Path.resolve()`` and ``as_uri()`` so the file is
